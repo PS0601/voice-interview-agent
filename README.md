@@ -88,3 +88,5 @@ livekit-voice-agent/
 ## License
 
 Released under the [MIT License](LICENSE). Note that running this project still requires your own paid API keys for LiveKit, OpenAI, Deepgram, Cartesia, and Beyond Presence — the license covers the code, not access to those services.
+
+> Originally based on [joshx2/AI-powered-Voice-Interview-Agent](https://github.com/joshx2/AI-powered-Voice-Interview-Agent) (MIT License). This repo is my continuation of that project. See the commit history for my changes.
