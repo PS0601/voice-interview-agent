@@ -1,31 +1,36 @@
+import os
+from pathlib import Path
+
 from dotenv import load_dotenv
 
-from livekit import agents
 from livekit.agents import (
     Agent,
     AgentServer,
     AgentSession,
     JobContext,
-    RoomInputOptions,
     cli,
 )
-
+from livekit.agents.voice import room_io
 from livekit.plugins import (
     langchain,
     cartesia,
     deepgram,
     noise_cancellation,
     silero,
-    bey,
 )
-
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 
 from graph import create_workflow
 
-
-from pathlib import Path
 load_dotenv(Path(__file__).parent / ".env.local")
+
+# Optional: set AGENT_NAME in .env.local to switch to explicit dispatch
+# (the agent then only joins rooms it is dispatched to). Empty = joins every new room,
+# which is the easiest way to test from the LiveKit playground.
+AGENT_NAME = os.getenv("AGENT_NAME", "")
+
+# Optional: set BEY_AVATAR_ID (and BEY_API_KEY) to enable the Beyond Presence avatar.
+BEY_AVATAR_ID = os.getenv("BEY_AVATAR_ID", "")
 
 
 class InterviewAgent(Agent):
@@ -42,13 +47,11 @@ class InterviewAgent(Agent):
 server = AgentServer()
 
 
-@server.rtc_session(agent_name="interview-agent")
+@server.rtc_session(agent_name=AGENT_NAME)
 async def entrypoint(ctx: JobContext):
 
     # Create the LangGraph workflow
-    lg_llm = langchain.LLMAdapter(
-        graph=create_workflow()
-    )
+    lg_llm = langchain.LLMAdapter(graph=create_workflow())
 
     # Configure the realtime voice pipeline
     session = AgentSession(
@@ -59,29 +62,27 @@ async def entrypoint(ctx: JobContext):
         llm=lg_llm,
         tts=cartesia.TTS(
             model="sonic-2",
-            voice="f786b574-daa5-4673-aa0c-cbe3e8534c02",
+            voice=os.getenv("CARTESIA_VOICE_ID", "f786b574-daa5-4673-aa0c-cbe3e8534c02"),
         ),
         vad=silero.VAD.load(),
         turn_detection=MultilingualModel(),
     )
 
-    # Create the Beyond Presence avatar
-    avatar = bey.AvatarSession(
-        avatar_id="694c83e2-8895-4a98-bd16-56332ca3f449",
-    )
+    # Optional Beyond Presence avatar (voice-only if BEY_AVATAR_ID is not set)
+    if BEY_AVATAR_ID:
+        from livekit.plugins import bey
 
-    # Start the avatar
-    await avatar.start(
-        session,
-        room=ctx.room,
-    )
+        avatar = bey.AvatarSession(avatar_id=BEY_AVATAR_ID)
+        await avatar.start(session, room=ctx.room)
 
     # Start the agent session
     await session.start(
         room=ctx.room,
         agent=InterviewAgent(),
-        room_input_options=RoomInputOptions(
-            noise_cancellation=noise_cancellation.BVC(),
+        room_options=room_io.RoomOptions(
+            audio_input=room_io.AudioInputOptions(
+                noise_cancellation=noise_cancellation.BVC(),
+            ),
         ),
     )
 

@@ -6,35 +6,66 @@ from operator import add as add_messages
 
 from langgraph.graph import StateGraph, END
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage, ToolMessage, AIMessage
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from pathlib import Path
+
+from langchain_openai import ChatOpenAI
+from langchain_core.embeddings import Embeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain_core.tools import tool
+from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
 
-load_dotenv(".env.local")
+# Resolve paths relative to this file, so the app works no matter which folder you run it from
+BASE_DIR = Path(__file__).parent
+load_dotenv(BASE_DIR / ".env.local")
+
+
+class LocalEmbeddings(Embeddings):
+    """Free, local embeddings (all-MiniLM-L6-v2 via ChromaDB's built-in ONNX model).
+    No API key needed; the ~80 MB model downloads once on first run."""
+
+    def __init__(self) -> None:
+        self._fn = DefaultEmbeddingFunction()
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        return [list(map(float, v)) for v in self._fn(texts)]
+
+    def embed_query(self, text: str) -> list[float]:
+        return self.embed_documents([text])[0]
+
 
 # -------------------- Build your Interview RAG pipeline --------------------
 def create_workflow():
-    llm = ChatOpenAI(model="gpt-4o", temperature=0.7)
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    # DeepSeek's API is OpenAI-compatible, so ChatOpenAI works with a different base_url
+    api_key = os.getenv("DEEPSEEK_API_KEY")
+    if not api_key:
+        raise RuntimeError("DEEPSEEK_API_KEY is not set. Add it to .env.local.")
+    llm = ChatOpenAI(
+        model=os.getenv("DEEPSEEK_MODEL", "deepseek-chat"),
+        api_key=api_key,
+        base_url="https://api.deepseek.com",
+        temperature=0.7,
+    )
+    embeddings = LocalEmbeddings()
 
-    pdf_path = os.getenv("COMPANY_PDF_PATH", "C:/Users/jdaw8/Downloads/FakeTech_Company_Profile.pdf") # this is how the interviewer will know abnout the company it works for.
+    # this is how the interviewer will know about the company it works for
+    pdf_path = os.getenv("COMPANY_PDF_PATH", str(BASE_DIR / "company_profile.pdf"))
     if not os.path.exists(pdf_path):
-        raise FileNotFoundError(f"PDF file not found: {pdf_path}. Please set COMPANY_PDF_PATH environment variable or place TechCompanyInfo.pdf in the current directory.")
+        raise FileNotFoundError(f"PDF file not found: {pdf_path}. Set COMPANY_PDF_PATH in .env.local or put company_profile.pdf in the project folder.")
 
     pages = PyPDFLoader(pdf_path).load() # allows the company info to be in the pages variable
 
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200) # chunck size info for the rag model
     pages_split = text_splitter.split_documents(pages)
 
-    persist_directory = os.getenv("CHROMA_DIR", "./chroma_store") # directory that holds vector info
+    persist_directory = os.getenv("CHROMA_DIR", str(BASE_DIR / "chroma_store")) # directory that holds vector info
     os.makedirs(persist_directory, exist_ok=True)
 
     vectorstore = Chroma(
          persist_directory=persist_directory,
          embedding_function=embeddings,
-         collection_name="company_info",)
+         collection_name="company_info_local",)  # new name: local embeddings differ from the old OpenAI ones
 
      # Only add the PDF if the database is empty
     if vectorstore._collection.count() == 0:
@@ -57,7 +88,7 @@ def create_workflow():
     def record_answer_tool(answer: str) -> str:
         """Records the candidate's answer to a text file for later review."""
         # Simply write the answer to the file
-        with open("interview_answers.txt", "a", encoding="utf-8") as f:
+        with open(BASE_DIR / "interview_answers.txt", "a", encoding="utf-8") as f:
             f.write(f"\nAnswer:\n{answer}\n")
             f.write("-" * 50 + "\n")
         
