@@ -61,7 +61,7 @@ async def entrypoint(ctx: JobContext):
         ),
         llm=lg_llm,
         tts=cartesia.TTS(
-            model="sonic-2",
+            model=os.getenv("CARTESIA_MODEL", "sonic-3"),
             voice=os.getenv("CARTESIA_VOICE_ID", "f786b574-daa5-4673-aa0c-cbe3e8534c02"),
         ),
         vad=silero.VAD.load(),
