@@ -12,7 +12,7 @@ A real-time AI interviewer you talk to out loud. You open a web page, click **St
 - **Tool calling:** the LLM decides when to call `company_info_tool` (RAG lookup) or `record_answer_tool` (logs the candidate's answer for review)
 - **Web frontend** (Next.js + React) with a start screen, live transcripts and an audio visualizer
 - **Proactive greeting:** the interviewer opens the conversation as soon as the candidate joins
-- **Tested and evaluated:** 16 unit tests in CI, plus evals for retrieval, interview flow, grounded answers and hallucination
+- **Tested and evaluated:** 18 unit tests in CI, plus evals for retrieval, interview flow, grounded answers and hallucination
 - **Optional animated avatar** via Beyond Presence (off by default)
 
 ## How It Works
@@ -102,7 +102,7 @@ To try the agent without the website, run `uv run agent.py console` and talk thr
 
 ## Testing & Evaluation
 
-**Tests** (`tests/`, 16 tests, about 2 seconds, no API keys): the LangGraph workflow runs against a scripted fake LLM and fake retriever. They cover tool routing, the tool-to-LLM loop, multiple tool calls in one turn, unknown tool names, answer logging (append, not overwrite), configuration errors, and PDF indexing without duplicate chunks. CI runs them on every push, along with frontend lint and type checks.
+**Tests** (`tests/`, 18 tests, about 2 seconds, no API keys): the LangGraph workflow runs against a scripted fake LLM and fake retriever. They cover tool routing, the tool-to-LLM loop, multiple tool calls in one turn, unknown tool names, answer logging (append, not overwrite), configuration errors, and PDF indexing without duplicate chunks. CI runs them on every push, along with frontend lint and type checks.
 
 ```bash
 uv run pytest
@@ -120,9 +120,23 @@ Each case runs several times to measure consistency, and latency is reported as 
 ```bash
 uv run python evals/run_evals.py            # writes evals/results.md and results.json
 uv run python evals/run_evals.py --runs 5   # more runs per case
+uv run python evals/run_evals.py --sweep    # compare chunk sizes / top-k (free, no LLM calls)
 ```
 
+Retrieval settings were tuned with `--sweep` on 15 questions, then checked on 10 held-out questions the tuning never saw, to avoid overfitting. See [`evals/sweep.md`](evals/sweep.md).
+
 Latest results: see [`evals/results.md`](evals/results.md).
+
+### What the evals found, and what changed
+
+| Step | Change | Retrieval (tuning · held-out) | Agent behavior |
+|---|---|---|---|
+| 1. Baseline | Chunks of 1000 chars, agent gets top-1 chunk | 12/15 · 9/10 | 42/42 (3 runs per case) |
+| 2. Retrieval tuning | `--sweep` picked chunks of 500 chars, top-3 (chosen on the tuning set only) | 14/15 · 10/10 | 39/42. Reading the failures: 1 answer not logged, 1 reply too long for voice, 1 grader false negative |
+| 3. Prompt + grader fix | Prompt requires logging every answer before the next question and replies under 80 words; grader accepts more honest phrasings | 14/15 · 10/10 | **70/70 (5 runs per case)** |
+
+Lessons: retrieval was the real weakness (the agent was never given the right chunk for some questions), more context made replies longer, and graders have bugs too, so failures should be read, not just counted. With 14 cases these evals catch regressions; they don't prove the agent is perfect. Next step: harder adversarial cases (off-topic requests, prompt injection, multi-part questions).
+
 
 ## Known Limitations / Next Steps
 

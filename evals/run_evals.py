@@ -3,6 +3,7 @@
     uv run python evals/run_evals.py                 # retrieval + behavior evals, 3 runs per case
     uv run python evals/run_evals.py --runs 5        # more runs = better stability estimate
     uv run python evals/run_evals.py --retrieval-only  # no LLM calls, no API key needed
+    uv run python evals/run_evals.py --sweep           # compare chunk sizes / top-k (no LLM calls)
 
 Behavior evals call the real LLM (DEEPSEEK_API_KEY from .env.local) through the same LangGraph
 workflow the voice agent uses; only the speech-to-text / text-to-speech layer is skipped.
@@ -24,7 +25,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from langchain_core.messages import AIMessage, HumanMessage  # noqa: E402
 
 import graph  # noqa: E402
-from cases import CASES, RETRIEVAL_CASES  # noqa: E402
+from cases import CASES, RETRIEVAL_CASES, RETRIEVAL_HOLDOUT  # noqa: E402
 
 
 def to_messages(history):
@@ -55,14 +56,54 @@ def grade(case, new_messages):
     return results, reply, called
 
 
-def run_retrieval_eval(retriever):
+def run_retrieval_eval(retriever, cases=RETRIEVAL_CASES, split="tuning"):
+    """A question is a hit if the chunks the tool would return (all top-k) contain the needed fact."""
     rows = []
-    for question, expected in RETRIEVAL_CASES:
+    for question, expected in cases:
         docs = retriever.invoke(question)
-        text = docs[0].page_content.lower() if docs else ""
-        rows.append({"question": question, "expected_any": expected,
-                     "hit": any(e.lower() in text for e in expected)})
+        text = " ".join(d.page_content for d in docs).lower()
+        rows.append({"question": question, "expected_any": expected, "split": split,
+                     "hit": any(e.lower() in text for e in expected), "context_chars": len(text)})
     return rows
+
+
+SWEEP = [(1000, 200, 1), (1000, 200, 2), (500, 100, 1), (500, 100, 2), (500, 100, 3),
+         (300, 60, 1), (300, 60, 2), (300, 60, 3), (200, 40, 2), (200, 40, 3)]
+
+
+def run_sweep(out_dir):
+    """Try several chunk sizes and top-k values. Choose using the tuning set only, then report the
+    held-out score for the chosen setting so the result isn't overfitted to the tuning questions."""
+    rows = []
+    for size, overlap, k in SWEEP:
+        with tempfile.TemporaryDirectory() as db:
+            r = graph.build_retriever(persist_directory=db, chunk_size=size, chunk_overlap=overlap, k=k)
+            n_chunks = r.vectorstore._collection.count()
+            tune = run_retrieval_eval(r, RETRIEVAL_CASES, "tuning")
+            hold = run_retrieval_eval(r, RETRIEVAL_HOLDOUT, "holdout")
+        ctx = sum(x["context_chars"] for x in tune + hold) / len(tune + hold)
+        rows.append({"chunk_size": size, "overlap": overlap, "k": k, "chunks": n_chunks,
+                     "tuning_hits": sum(x["hit"] for x in tune), "holdout_hits": sum(x["hit"] for x in hold),
+                     "avg_context_chars": round(ctx)})
+        print(f"  size={size:<5} overlap={overlap:<4} k={k}  tuning {rows[-1]['tuning_hits']}/{len(tune)}  "
+              f"holdout {rows[-1]['holdout_hits']}/{len(hold)}  ~{rows[-1]['avg_context_chars']} chars")
+    # pick: best tuning score, then the least context (cheaper, more focused prompts)
+    best = max(rows, key=lambda r: (r["tuning_hits"], -r["avg_context_chars"]))
+    nt, nh = len(RETRIEVAL_CASES), len(RETRIEVAL_HOLDOUT)
+    lines = ["# Retrieval sweep", "",
+             "Chosen on the tuning set only (best hit rate, then smallest context). "
+             "The held-out column shows whether that choice generalises.", "",
+             "| Chunk size | Overlap | Top-k | Chunks | Tuning hits | Held-out hits | Avg context (chars) |",
+             "|---|---|---|---|---|---|---|"]
+    for r in rows:
+        mark = " ⭐" if r is best else ""
+        lines.append(f"| {r['chunk_size']}{mark} | {r['overlap']} | {r['k']} | {r['chunks']} | "
+                     f"{r['tuning_hits']}/{nt} | {r['holdout_hits']}/{nh} | {r['avg_context_chars']} |")
+    lines += ["", f"**Chosen:** chunk size {best['chunk_size']}, overlap {best['overlap']}, top-k {best['k']}. "
+              f"To use it, add to `.env.local`:", "", "```",
+              f"RAG_CHUNK_SIZE={best['chunk_size']}", f"RAG_CHUNK_OVERLAP={best['overlap']}", f"RAG_TOP_K={best['k']}", "```"]
+    (out_dir / "sweep.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print("\n" + "\n".join(lines))
 
 
 def run_behavior_eval(retriever, runs):
@@ -99,11 +140,16 @@ def write_report(retrieval, behavior, runs, out_dir):
              f"Run on {datetime.now():%Y-%m-%d %H:%M} · model `{graph.os.getenv('DEEPSEEK_MODEL', 'deepseek-chat')}` "
              f"· embeddings all-MiniLM-L6-v2 (local) · {runs} run(s) per behavior case", ""]
 
-    hits = sum(r["hit"] for r in retrieval)
-    lines += ["## Retrieval (top-1 chunk contains the needed fact)", "",
-              f"**Hit rate @1: {hits}/{len(retrieval)} ({pct(hits, len(retrieval))})**", "",
-              "| Question | Hit |", "|---|---|"]
-    lines += [f"| {r['question']} | {'✅' if r['hit'] else '❌'} |" for r in retrieval]
+    tune = [r for r in retrieval if r["split"] == "tuning"]
+    hold = [r for r in retrieval if r["split"] == "holdout"]
+    th, hh = sum(r["hit"] for r in tune), sum(r["hit"] for r in hold)
+    lines += [f"## Retrieval (returned chunks contain the needed fact)", "",
+              f"Settings: chunk size {graph.DEFAULT_CHUNK_SIZE}, overlap {graph.DEFAULT_CHUNK_OVERLAP}, "
+              f"top-k {graph.DEFAULT_TOP_K}", "",
+              f"**Tuning set: {th}/{len(tune)} ({pct(th, len(tune))}) · "
+              f"Held-out set: {hh}/{len(hold)} ({pct(hh, len(hold))})**", "",
+              "| Question | Set | Hit |", "|---|---|---|"]
+    lines += [f"| {r['question']} | {r['split']} | {'✅' if r['hit'] else '❌'} |" for r in retrieval]
 
     if behavior:
         by_cat, by_case = defaultdict(list), defaultdict(list)
@@ -136,13 +182,18 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--runs", type=int, default=3, help="runs per behavior case (default 3)")
     ap.add_argument("--retrieval-only", action="store_true", help="skip LLM calls")
+    ap.add_argument("--sweep", action="store_true", help="compare chunk sizes / top-k (no LLM calls)")
     args = ap.parse_args()
 
     out_dir = Path(__file__).resolve().parent
+    if args.sweep:
+        print("Retrieval sweep...")
+        run_sweep(out_dir)
+        return
     with tempfile.TemporaryDirectory() as db:
         retriever = graph.build_retriever(persist_directory=db)  # fresh index, real local embeddings
         print("Retrieval eval...")
-        retrieval = run_retrieval_eval(retriever)
+        retrieval = run_retrieval_eval(retriever) + run_retrieval_eval(retriever, RETRIEVAL_HOLDOUT, "holdout")
         behavior = []
         if not args.retrieval_only:
             print(f"Behavior eval ({len(CASES)} cases x {args.runs} runs)...")

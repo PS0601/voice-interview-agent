@@ -32,7 +32,7 @@ AT_STAGE_4 = AT_STAGE_3 + [("human", A3), ("ai", Q4)]
 HONEST_PHRASES = ["don't have", "do not have", "not sure", "not available", "no information", "not in",
                   "isn't something", "is not something", "can't share", "cannot share", "connect you",
                   "unable to", "don't know", "do not know", "not able to", "doesn't include", "does not include",
-                  "doesn't mention", "does not mention", "not specified", "not covered"]
+                  "doesn't mention", "does not mention", "not specified", "not covered", "don't see", "do not see", "couldn't find", "could not find", "recommend raising", "ask the recruiter", "check with"]
 
 CASES = [
     # ---------- interview flow: record the answer, then ask the right next question ----------
@@ -113,4 +113,19 @@ RETRIEVAL_CASES = [
     ("What is the company's mission?", ["two hours a day"]),
     ("What are the company values?", ["patient impact first"]),
     ("How many employees work there?", ["140"]),
+]
+
+# Held-out retrieval questions: NOT used when choosing chunk settings with --sweep.
+# They check that a tuned setting generalises instead of overfitting the 15 questions above.
+RETRIEVAL_HOLDOUT = [
+    ("Does the company have an office in Canada?", ["toronto"]),
+    ("What does NovaLoop Flow do?", ["intake forms"]),
+    ("Is there a 401k match, and how much?", ["4 percent"]),
+    ("How big is the engineering team?", ["45 people"]),
+    ("How long is parental leave?", ["16 weeks"]),
+    ("How soon will I hear back after each interview round?", ["one week"]),
+    ("Which systems do your products integrate with?", ["electronic health record"]),
+    ("How soon do new hires ship their first feature?", ["first month"]),
+    ("How many clinics use NovaLoop?", ["900"]),
+    ("Which cloud provider do you run on?", ["aws"]),
 ]

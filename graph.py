@@ -48,8 +48,19 @@ def build_llm():
     )
 
 
-def build_retriever(embeddings=None, pdf_path=None, persist_directory=None, k: int = 1):
+# Retrieval settings. Defaults are the original ones; tune them with `evals/run_evals.py --sweep`
+# and override with RAG_CHUNK_SIZE / RAG_CHUNK_OVERLAP / RAG_TOP_K in .env.local.
+DEFAULT_CHUNK_SIZE = int(os.getenv("RAG_CHUNK_SIZE", "500"))
+DEFAULT_CHUNK_OVERLAP = int(os.getenv("RAG_CHUNK_OVERLAP", "100"))
+DEFAULT_TOP_K = int(os.getenv("RAG_TOP_K", "3"))
+
+
+def build_retriever(embeddings=None, pdf_path=None, persist_directory=None, k=None,
+                    chunk_size=None, chunk_overlap=None):
     """Load the company PDF, split it into chunks, index it in ChromaDB and return a retriever."""
+    k = k or DEFAULT_TOP_K
+    chunk_size = chunk_size or DEFAULT_CHUNK_SIZE
+    chunk_overlap = DEFAULT_CHUNK_OVERLAP if chunk_overlap is None else chunk_overlap
     embeddings = embeddings or LocalEmbeddings()
 
     # this is how the interviewer will know about the company it works for
@@ -59,7 +70,7 @@ def build_retriever(embeddings=None, pdf_path=None, persist_directory=None, k: i
 
     pages = PyPDFLoader(pdf_path).load()
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     pages_split = text_splitter.split_documents(pages)
 
     persist_directory = persist_directory or os.getenv("CHROMA_DIR", str(BASE_DIR / "chroma_store"))
@@ -68,7 +79,8 @@ def build_retriever(embeddings=None, pdf_path=None, persist_directory=None, k: i
     vectorstore = Chroma(
          persist_directory=persist_directory,
          embedding_function=embeddings,
-         collection_name="company_info_local",)  # new name: local embeddings differ from the old OpenAI ones
+         # one collection per chunking setting, so changing the settings never reuses a stale index
+         collection_name=f"company_info_local_{chunk_size}_{chunk_overlap}",)
 
     # Only add the PDF if the database is empty
     if vectorstore._collection.count() == 0:
@@ -92,7 +104,8 @@ def create_workflow(llm=None, retriever=None, answers_path=None):
         if not docs:
             return "No relevant information found in the company documents."
 
-        return docs[0].page_content
+        # return every retrieved chunk (top-k), not just the first one
+        return "\n\n---\n\n".join(d.page_content for d in docs)
         
     @tool # tool to record answers
     def record_answer_tool(answer: str) -> str:
@@ -134,7 +147,8 @@ def create_workflow(llm=None, retriever=None, answers_path=None):
             "IMPORTANT ROUTING RULES:\n"
             "- When the candidate asks questions about the company (mission, culture, revenue, etc.), use the company_info_tool to find relevant information\n"
             "- Do not repeat the entire company document. Give a concise answer using only the relevant information from the company_info_tool\n"
-            "- When the candidate gives answers to your interview questions, use the record_answer_tool to record their response, then acknowledge it and ask the next question\n"
+            "- After EVERY candidate answer to one of the 4 interview questions, you MUST call record_answer_tool first, before acknowledging the answer or asking the next question. Never skip this step, even if you are confident about what to ask next\n"
+            "- This is a spoken conversation: keep every reply under 80 words and answer only what was asked\n"
             "- Be conversational, professional, and helpful\n"
             "- If you don't have specific company information, say so honestly and offer to connect them with someone who might know more"
         )

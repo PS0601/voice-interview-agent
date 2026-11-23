@@ -146,8 +146,8 @@ def test_pdf_is_indexed_and_retrievable(tmp_path):
     retriever = graph.build_retriever(embeddings=KeywordEmbeddings(), pdf_path=str(PDF),
                                       persist_directory=str(tmp_path / "db"))
     docs = retriever.invoke("What benefits like dental insurance and parental leave do you offer?")
-    assert len(docs) == 1
-    assert "dental" in docs[0].page_content.lower()
+    assert 1 <= len(docs) <= graph.DEFAULT_TOP_K
+    assert "dental" in " ".join(d.page_content for d in docs).lower()
 
 
 def test_reindexing_does_not_duplicate_chunks(tmp_path):
@@ -157,3 +157,25 @@ def test_reindexing_does_not_duplicate_chunks(tmp_path):
     second = graph.build_retriever(embeddings=KeywordEmbeddings(), pdf_path=str(PDF), persist_directory=db)
     assert count > 0
     assert second.vectorstore._collection.count() == count
+
+
+def test_company_tool_returns_all_top_k_chunks(answers_file):
+    from langchain_core.documents import Document
+    retriever = FakeRetriever(docs=[Document(page_content="Chunk A: Austin HQ"),
+                                    Document(page_content="Chunk B: Toronto office")])
+    llm = FakeLLM([
+        ai_tool_calls(tool_call("company_info_tool", {"query": "offices"})),
+        AIMessage(content="Austin and Toronto."),
+    ])
+    messages = run(llm, retriever=retriever, answers_path=answers_file)
+    content = next(m for m in messages if isinstance(m, ToolMessage)).content
+    assert "Chunk A" in content and "Chunk B" in content
+
+
+def test_chunk_settings_change_the_index(tmp_path):
+    big = graph.build_retriever(embeddings=KeywordEmbeddings(), pdf_path=str(PDF),
+                                persist_directory=str(tmp_path / "db"), chunk_size=1000, chunk_overlap=200)
+    small = graph.build_retriever(embeddings=KeywordEmbeddings(), pdf_path=str(PDF),
+                                  persist_directory=str(tmp_path / "db"), chunk_size=300, chunk_overlap=60, k=3)
+    assert small.vectorstore._collection.count() > big.vectorstore._collection.count()
+    assert small.search_kwargs["k"] == 3
