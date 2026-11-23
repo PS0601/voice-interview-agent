@@ -88,7 +88,8 @@ interface AudioVisualizerProps extends MotionProps {
 
 export function AudioVisualizer({
   themeMode,
-  isChatOpen: _isChatOpen, // consumed here so it is not passed to DOM elements
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- pulled out so it is not passed to DOM elements
+  isChatOpen: _isChatOpen,
   type,
   config,
   className,

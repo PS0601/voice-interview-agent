@@ -1,0 +1,1364 @@
+{
+  "retrieval": [
+    {
+      "question": "What benefits do you offer?",
+      "expected_any": [
+        "dental",
+        "401k",
+        "parental"
+      ],
+      "hit": true
+    },
+    {
+      "question": "How much paid time off do employees get?",
+      "expected_any": [
+        "20 days"
+      ],
+      "hit": true
+    },
+    {
+      "question": "What programming languages and frameworks does the backend use?",
+      "expected_any": [
+        "fastapi"
+      ],
+      "hit": true
+    },
+    {
+      "question": "Where is the company headquartered?",
+      "expected_any": [
+        "austin"
+      ],
+      "hit": true
+    },
+    {
+      "question": "When was NovaLoop founded?",
+      "expected_any": [
+        "2019"
+      ],
+      "hit": true
+    },
+    {
+      "question": "What does the company's main product do?",
+      "expected_any": [
+        "scheduler"
+      ],
+      "hit": false
+    },
+    {
+      "question": "Who are your customers?",
+      "expected_any": [
+        "clinics"
+      ],
+      "hit": true
+    },
+    {
+      "question": "How much revenue does the company make?",
+      "expected_any": [
+        "18 million"
+      ],
+      "hit": true
+    },
+    {
+      "question": "What is the interview process like?",
+      "expected_any": [
+        "take-home",
+        "recruiter call"
+      ],
+      "hit": true
+    },
+    {
+      "question": "Can I work remotely?",
+      "expected_any": [
+        "hybrid",
+        "remote"
+      ],
+      "hit": true
+    },
+    {
+      "question": "Is there a learning or education budget?",
+      "expected_any": [
+        "2,000"
+      ],
+      "hit": true
+    },
+    {
+      "question": "What does an AI Engineer do at NovaLoop?",
+      "expected_any": [
+        "ai engineers"
+      ],
+      "hit": true
+    },
+    {
+      "question": "What is the company's mission?",
+      "expected_any": [
+        "two hours a day"
+      ],
+      "hit": false
+    },
+    {
+      "question": "What are the company values?",
+      "expected_any": [
+        "patient impact first"
+      ],
+      "hit": true
+    },
+    {
+      "question": "How many employees work there?",
+      "expected_any": [
+        "140"
+      ],
+      "hit": false
+    }
+  ],
+  "behavior": [
+    {
+      "id": "flow_q1_to_q2",
+      "category": "Interview flow",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.65,
+      "tools_called": [
+        "record_answer_tool"
+      ],
+      "checks": {
+        "calls record_answer_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "does not call company_info_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['technical background', 'technologies', 'programming languages']"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "That's great to hear! Now, I'd love to learn about your technical background. Could you tell me about your experience with technology? What technologies, programming languages, or technical projects have you worked with?",
+      "error": null
+    },
+    {
+      "id": "flow_q1_to_q2",
+      "category": "Interview flow",
+      "run": 2,
+      "passed": true,
+      "latency_s": 1.84,
+      "tools_called": [
+        "record_answer_tool"
+      ],
+      "checks": {
+        "calls record_answer_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "does not call company_info_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['technical background', 'technologies', 'programming languages']"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "That's great to hear! It sounds like you have a clear focus on AI agents and LLM products.\n\nNow, I'd love to learn about your technical background. Could you tell me about your experience with technology? What technologies, programming languages, or technical projects have you worked with?",
+      "error": null
+    },
+    {
+      "id": "flow_q1_to_q2",
+      "category": "Interview flow",
+      "run": 3,
+      "passed": true,
+      "latency_s": 2.36,
+      "tools_called": [
+        "record_answer_tool"
+      ],
+      "checks": {
+        "calls record_answer_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "does not call company_info_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['technical background', 'technologies', 'programming languages']"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "That's great to hear! Now, I'd love to learn about your technical background. Could you tell me about your experience with technology? What technologies, programming languages, or technical projects have you worked with?",
+      "error": null
+    },
+    {
+      "id": "flow_q2_to_q3",
+      "category": "Interview flow",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.36,
+      "tools_called": [
+        "record_answer_tool"
+      ],
+      "checks": {
+        "calls record_answer_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "does not call company_info_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['challenge']"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Excellent! That's an impressive set of projects. Now, I'd like to hear about a time when you faced a significant challenge, either technical or professional. Could you walk me through the situation, what obstacles you encountered, and how you overcame them? What did you learn from that experience?",
+      "error": null
+    },
+    {
+      "id": "flow_q2_to_q3",
+      "category": "Interview flow",
+      "run": 2,
+      "passed": true,
+      "latency_s": 2.86,
+      "tools_called": [
+        "record_answer_tool"
+      ],
+      "checks": {
+        "calls record_answer_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "does not call company_info_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['challenge']"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Excellent! Those are impressive projects - especially the voice interviewer with LiveKit and LangGraph. Now, I'd like to hear about a time when you faced a significant challenge, either technical or professional. Could you walk me through the situation, what obstacles you encountered, and how you overcame them? What did you learn from that experience?",
+      "error": null
+    },
+    {
+      "id": "flow_q2_to_q3",
+      "category": "Interview flow",
+      "run": 3,
+      "passed": true,
+      "latency_s": 2.35,
+      "tools_called": [
+        "record_answer_tool"
+      ],
+      "checks": {
+        "calls record_answer_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "does not call company_info_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['challenge']"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Excellent! Now, I'd like to hear about a time when you faced a significant challenge, either technical or professional. Could you walk me through the situation, what obstacles you encountered, and how you overcame them? What did you learn from that experience?",
+      "error": null
+    },
+    {
+      "id": "flow_q3_to_q4",
+      "category": "Interview flow",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.36,
+      "tools_called": [
+        "record_answer_tool"
+      ],
+      "checks": {
+        "calls record_answer_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "does not call company_info_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['questions', 'ask me anything']"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Thank you for sharing that with me. That's a great example of debugging rigorously and building in safeguards afterward. Now, I'd like to give you the opportunity to ask me anything about our company, the role, or anything else you'd like to know. What questions do you have for me?",
+      "error": null
+    },
+    {
+      "id": "flow_q3_to_q4",
+      "category": "Interview flow",
+      "run": 2,
+      "passed": true,
+      "latency_s": 2.49,
+      "tools_called": [
+        "record_answer_tool"
+      ],
+      "checks": {
+        "calls record_answer_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "does not call company_info_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['questions', 'ask me anything']"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Thank you for sharing that with me. That's a really instructive example \u2014 aligning data by date rather than row position is a subtle bug that's easy to miss, and adding tests plus verifying against real data is exactly the right instinct.\n\nNow, I'd like to give you the opportunity to ask me anything about our company, the role, or anything else you'd like to know. What questions do you have for me?",
+      "error": null
+    },
+    {
+      "id": "flow_q3_to_q4",
+      "category": "Interview flow",
+      "run": 3,
+      "passed": true,
+      "latency_s": 2.23,
+      "tools_called": [
+        "record_answer_tool"
+      ],
+      "checks": {
+        "calls record_answer_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "does not call company_info_tool": {
+          "passed": true,
+          "detail": "called=['record_answer_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['questions', 'ask me anything']"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Thank you for sharing that with me. That's a great example of catching a subtle data-alignment bug and building safeguards against it. Now, I'd like to give you the opportunity to ask me anything about our company, the role, or anything else you'd like to know. What questions do you have for me?",
+      "error": null
+    },
+    {
+      "id": "rag_benefits",
+      "category": "Company Q&A (RAG)",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.45,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "does not call record_answer_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['401', 'parental', 'dental', 'paid time off', '20 days']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "46 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Here's what we offer: health, dental, and vision insurance, a 401k match up to 4%, 20 days of paid time off plus holidays, 16 weeks of paid parental leave, and a home office stipend.\n\nDo you have any other questions about the company or the role?",
+      "error": null
+    },
+    {
+      "id": "rag_benefits",
+      "category": "Company Q&A (RAG)",
+      "run": 2,
+      "passed": true,
+      "latency_s": 2.15,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "does not call record_answer_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['401', 'parental', 'dental', 'paid time off', '20 days']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "44 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "We offer a solid benefits package: health, dental, and vision insurance, a 401k match up to 4%, 20 days of paid time off plus holidays, 16 weeks of paid parental leave, and a home office stipend. Do you have any other questions for me?",
+      "error": null
+    },
+    {
+      "id": "rag_benefits",
+      "category": "Company Q&A (RAG)",
+      "run": 3,
+      "passed": true,
+      "latency_s": 2.36,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "does not call record_answer_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['401', 'parental', 'dental', 'paid time off', '20 days']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "48 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! We offer health, dental, and vision insurance, a 401k match up to 4%, 20 days of paid time off plus holidays, 16 weeks of paid parental leave, and a home office stipend. Is there anything else you'd like to know about the role or the company?",
+      "error": null
+    },
+    {
+      "id": "rag_tech_stack",
+      "category": "Company Q&A (RAG)",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.14,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "does not call record_answer_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['fastapi', 'react', 'aws', 'postgres', 'langgraph']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "74 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! The engineering team is about 45 people organized into product squads. The backend is Python with FastAPI, the frontend is React and TypeScript, and services run on AWS with PostgreSQL and Redis. Notably, the AI team builds LLM agents with LangGraph and evaluates them with an in-house testing suite \u2014 which sounds like a good fit given your background with LangGraph and multi-agent systems.\n\nIs there anything else you'd like to know?",
+      "error": null
+    },
+    {
+      "id": "rag_tech_stack",
+      "category": "Company Q&A (RAG)",
+      "run": 2,
+      "passed": true,
+      "latency_s": 2.97,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "does not call record_answer_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['fastapi', 'react', 'aws', 'postgres', 'langgraph']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "84 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! Here's what I can share about the engineering team's tech stack:\n\n- **Backend:** Python with FastAPI\n- **Frontend:** React and TypeScript\n- **Infrastructure:** AWS, with PostgreSQL and Redis\n- **AI:** LLM agents built with LangGraph, evaluated with an in-house testing suite\n\nThe team is around 45 engineers organized into product squads. Given your experience with Python, FastAPI, and LangGraph, there's a lot of overlap with what you've built. Is there anything else you'd like to know about the role or the company?",
+      "error": null
+    },
+    {
+      "id": "rag_tech_stack",
+      "category": "Company Q&A (RAG)",
+      "run": 3,
+      "passed": true,
+      "latency_s": 3.07,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "does not call record_answer_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['fastapi', 'react', 'aws', 'postgres', 'langgraph']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "78 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! Here's a quick overview of our engineering setup:\n\n- **Team structure:** About 45 engineers organized into product squads.\n- **Backend:** Python with FastAPI.\n- **Frontend:** React and TypeScript.\n- **Infrastructure:** Services run on AWS with PostgreSQL and Redis.\n- **AI team:** Builds LLM agents with LangGraph and evaluates them with an in-house testing suite.\n\nThat last part seems particularly relevant to your background with LangGraph and agent work! Do you have any other questions for me?",
+      "error": null
+    },
+    {
+      "id": "rag_location",
+      "category": "Company Q&A (RAG)",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.25,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['austin']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "27 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "NovaLoop Labs is headquartered in Austin, Texas, with a second office in Toronto. Is there anything else you'd like to know about the company or the role?",
+      "error": null
+    },
+    {
+      "id": "rag_location",
+      "category": "Company Q&A (RAG)",
+      "run": 2,
+      "passed": true,
+      "latency_s": 1.74,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['austin']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "27 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "NovaLoop Labs is headquartered in Austin, Texas, with a second office in Toronto. Is there anything else you'd like to know about the company or the role?",
+      "error": null
+    },
+    {
+      "id": "rag_location",
+      "category": "Company Q&A (RAG)",
+      "run": 3,
+      "passed": true,
+      "latency_s": 2.36,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['austin']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "27 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "NovaLoop Labs is headquartered in Austin, Texas, with a second office in Toronto. Is there anything else you'd like to know about the company or the role?",
+      "error": null
+    },
+    {
+      "id": "rag_interview_process",
+      "category": "Company Q&A (RAG)",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.76,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['take-home', 'live coding', 'hiring manager', 'technical interview']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "86 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! Here's how our process works: there are four steps in total \u2014 a recruiter call, this AI screening interview, a technical interview (which involves either a take-home or a live coding exercise), and a final round with the hiring manager and team. Candidates usually hear back within one week of each step.\n\nSo you've completed the recruiter call and this screening \u2014 the next step for you would be the technical interview. Do you have any other questions about the role or the company?",
+      "error": null
+    },
+    {
+      "id": "rag_interview_process",
+      "category": "Company Q&A (RAG)",
+      "run": 2,
+      "passed": true,
+      "latency_s": 2.66,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['take-home', 'live coding', 'hiring manager', 'technical interview']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "74 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! Here's what I can share about the interview process. It has four steps:\n\n1. A recruiter call\n2. This AI screening interview\n3. A technical interview with a take-home or live coding exercise\n4. A final round with the hiring manager and team\n\nCandidates usually hear back within one week of each step. So the next step after today would be the technical interview. Do you have any other questions for me?",
+      "error": null
+    },
+    {
+      "id": "rag_interview_process",
+      "category": "Company Q&A (RAG)",
+      "run": 3,
+      "passed": true,
+      "latency_s": 2.56,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['take-home', 'live coding', 'hiring manager', 'technical interview']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "82 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Thanks for asking! Here's how our process works: there are four steps in total \u2014 a recruiter call, this AI screening interview, a technical interview (which involves either a take-home or a live coding exercise), and a final round with the hiring manager and team. You can typically expect to hear back within one week after each step.\n\nSo you're currently in the AI screening stage \u2014 next up would be the technical interview. Do you have any other questions for me?",
+      "error": null
+    },
+    {
+      "id": "rag_remote",
+      "category": "Company Q&A (RAG)",
+      "run": 1,
+      "passed": true,
+      "latency_s": 3.17,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['remote']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "95 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "I have some general information about NovaLoop Labs, but the specific details about remote versus in-office work aren't in what I have access to. What I can tell you is that we're headquartered in Austin, Texas, with a second office in Toronto, and we have about 140 employees.\n\nFor the exact work arrangement for this role, I'd recommend confirming with our recruiting team, as it can vary by team and position. I don't want to give you inaccurate information. Is there anything else you'd like to know about the company, our mission, or the role?",
+      "error": null
+    },
+    {
+      "id": "rag_remote",
+      "category": "Company Q&A (RAG)",
+      "run": 2,
+      "passed": true,
+      "latency_s": 2.25,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['remote']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "75 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! NovaLoop Labs is headquartered in Austin, Texas, with a second office in Toronto, and we have about 140 employees. As for the specifics of this role's remote versus in-office arrangement, I don't have that detail in front of me \u2014 I'd be happy to connect you with our recruiting team who can confirm the exact policy for this position.\n\nDo you have any other questions about the company, the role, or anything else?",
+      "error": null
+    },
+    {
+      "id": "rag_remote",
+      "category": "Company Q&A (RAG)",
+      "run": 3,
+      "passed": true,
+      "latency_s": 4.5,
+      "tools_called": [
+        "company_info_tool",
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool', 'company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['hybrid', 'remote']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "97 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! Here's what I can tell you: NovaLoop Labs operates on a hybrid model. Teams work three days a week in the office for local employees, and there are fully remote roles for some positions. Since we have offices in Austin and Toronto, the exact arrangement for this AI Engineer role can depend on your location and the team's needs. I'd recommend confirming the specifics with the hiring team, but it's certainly worth asking about since remote is possible for some roles.\n\nWas there anything else you'd like to know about the company or the role?",
+      "error": null
+    },
+    {
+      "id": "rag_learning_budget",
+      "category": "Company Q&A (RAG)",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.35,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['2,000']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "33 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Yes \u2014 every engineer gets a yearly learning budget of $2,000, which you can put toward courses or conferences. Is there anything else you'd like to know about the role or the company?",
+      "error": null
+    },
+    {
+      "id": "rag_learning_budget",
+      "category": "Company Q&A (RAG)",
+      "run": 2,
+      "passed": true,
+      "latency_s": 2.06,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['2,000']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "65 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Yes \u2014 every engineer gets a yearly learning budget of $2,000, which you can put toward courses, conferences, or other development opportunities. Beyond that, new hires are paired with a mentor and are expected to ship their first feature within their first month, so there's a strong emphasis on hands-on growth.\n\nIs there anything else you'd like to know about the role or the company?",
+      "error": null
+    },
+    {
+      "id": "rag_learning_budget",
+      "category": "Company Q&A (RAG)",
+      "run": 3,
+      "passed": true,
+      "latency_s": 2.45,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['2,000']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "55 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Yes \u2014 every engineer gets a yearly learning budget of $2,000, which you can put toward courses, conferences, or other professional development. Beyond that, new hires also get a mentor and are expected to ship their first feature within their first month.\n\nWould you like to know anything else about the role or the company?",
+      "error": null
+    },
+    {
+      "id": "rag_role",
+      "category": "Company Q&A (RAG)",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.35,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['retrieval', 'tool-calling', 'voice', 'evaluation']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "76 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! As an AI Engineer at NovaLoop, you'd design, build, and evaluate the LLM agents behind NovaLoop Scheduler. Day to day, that means working on retrieval pipelines, tool-calling agents, voice interfaces, and evaluation datasets. New hires get a mentor and are expected to ship their first feature within their first month.\n\nGiven your background with CrewAI, LangChain, and LiveKit voice interfaces, that sounds like a strong fit. Do you have any other questions for me?",
+      "error": null
+    },
+    {
+      "id": "rag_role",
+      "category": "Company Q&A (RAG)",
+      "run": 2,
+      "passed": true,
+      "latency_s": 2.37,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['retrieval', 'tool-calling', 'voice', 'evaluation']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "74 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! As an AI Engineer here, you'd design, build, and evaluate the LLM agents behind NovaLoop Scheduler. Day to day that means working on retrieval pipelines, tool-calling agents, voice interfaces, and evaluation datasets. New hires get a mentor and are expected to ship their first feature within their first month. Given your background with CrewAI, LangGraph, and voice interfaces, that sounds like a strong fit. Is there anything else you'd like to know?",
+      "error": null
+    },
+    {
+      "id": "rag_role",
+      "category": "Company Q&A (RAG)",
+      "run": 3,
+      "passed": true,
+      "latency_s": 2.44,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['retrieval', 'tool-calling', 'voice', 'evaluation']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "71 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! As an AI Engineer at NovaLoop, you'd design, build, and evaluate the LLM agents behind our product, NovaLoop Scheduler. Day to day that means working on retrieval pipelines, tool-calling agents, voice interfaces, and evaluation datasets. New hires are paired with a mentor and typically ship their first feature within their first month.\n\nWould you like me to dig into anything else - like our culture, team structure, or benefits?",
+      "error": null
+    },
+    {
+      "id": "rag_funding",
+      "category": "Company Q&A (RAG)",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.25,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['series b', '30 million']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "48 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! NovaLoop raised a 30 million dollar Series B round in early 2026, and the company has passed 18 million dollars in annual recurring revenue as of 2025. So we're well-funded and growing. Is there anything else you'd like to know about the company or the role?",
+      "error": null
+    },
+    {
+      "id": "rag_funding",
+      "category": "Company Q&A (RAG)",
+      "run": 2,
+      "passed": true,
+      "latency_s": 2.26,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['series b', '30 million', '$30']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "58 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question! NovaLoop raised a **$30 million Series B round in early 2026**, and the company has passed **$18 million in annual recurring revenue** as of 2025 while serving more than 900 clinics across the US and Canada. So we're well-funded and growing.\n\nWould you like to know anything else about the role, the team, or the company?",
+      "error": null
+    },
+    {
+      "id": "rag_funding",
+      "category": "Company Q&A (RAG)",
+      "run": 3,
+      "passed": true,
+      "latency_s": 2.87,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "calls company_info_tool": {
+          "passed": true,
+          "detail": "called=['company_info_tool']"
+        },
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['series b', '30 million']"
+        },
+        "concise (<= 120 words)": {
+          "passed": true,
+          "detail": "55 words"
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "Great question. NovaLoop raised a 30 million dollar Series B round in early 2026, and the company passed 18 million dollars in annual recurring revenue in 2025. So we're well-funded and growing, serving over 900 clinics across the US and Canada. Is there anything else you'd like to know about the role or the company?",
+      "error": null
+    },
+    {
+      "id": "honest_ceo_salary",
+      "category": "No hallucination",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.96,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=[\"don't have\", 'connect you']"
+        },
+        "no invented facts": {
+          "passed": true,
+          "detail": ""
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "I don't have specific information about the CEO's compensation in the materials I have access to, so I can't give you an accurate figure there. I'd rather not guess on something like that. If it's important to you, I can connect you with our HR team, who would be the right people to address compensation questions.\n\nIs there anything else you'd like to know about the company, the role, or how we work? For example, I can tell you about the AI Engineer role itself or how our teams operate.",
+      "error": null
+    },
+    {
+      "id": "honest_ceo_salary",
+      "category": "No hallucination",
+      "run": 2,
+      "passed": true,
+      "latency_s": 2.76,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=[\"don't have\", 'connect you']"
+        },
+        "no invented facts": {
+          "passed": true,
+          "detail": ""
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "I looked into it, but I don't have any information about the CEO's compensation in our company materials - that kind of detail typically isn't included in what I have access to. I'd be happy to connect you with our HR team, who would be the right people to address compensation questions.\n\nIs there anything else you'd like to know about the role, our culture, or how we work?",
+      "error": null
+    },
+    {
+      "id": "honest_ceo_salary",
+      "category": "No hallucination",
+      "run": 3,
+      "passed": true,
+      "latency_s": 2.15,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=[\"don't have\"]"
+        },
+        "no invented facts": {
+          "passed": true,
+          "detail": ""
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "I don't have specific information about the CEO's compensation in our company documents, so I can't give you an accurate figure there. That's typically something handled by HR or disclosed in official filings, so I'd suggest connecting with our HR team if that detail matters to you.\n\nIs there anything else I can help with - perhaps about the AI Engineer role, our tech stack, or how the team works?",
+      "error": null
+    },
+    {
+      "id": "honest_visa",
+      "category": "No hallucination",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.66,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=[\"don't have\", 'connect you']"
+        },
+        "no invented facts": {
+          "passed": true,
+          "detail": ""
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "I checked our company information, but I don't have specific details about H-1B visa sponsorship on hand. I'd rather not guess on something that important. I'd recommend raising this directly with the recruiter during your recruiter call\u2014they can give you an accurate answer or connect you with the right person on our people team.\n\nIn the meantime, is there anything else you'd like to know about the role, our culture, or the interview process?",
+      "error": null
+    },
+    {
+      "id": "honest_visa",
+      "category": "No hallucination",
+      "run": 2,
+      "passed": true,
+      "latency_s": 3.28,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=[\"don't have\", \"doesn't mention\"]"
+        },
+        "no invented facts": {
+          "passed": true,
+          "detail": ""
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "I checked our company information, but I don't have specific details on H-1B visa sponsorship. The benefits document covers health, dental, and vision insurance, a 401k match up to 4%, paid time off, parental leave, and a home office stipend, but it doesn't mention immigration or visa sponsorship.\n\nI'd recommend raising this directly with the recruiter during your recruiter call, as they'll have the most accurate and up-to-date information on sponsorship policy. I don't want to give you an answer I can't verify. Is there anything else I can help you with?",
+      "error": null
+    },
+    {
+      "id": "honest_visa",
+      "category": "No hallucination",
+      "run": 3,
+      "passed": true,
+      "latency_s": 3.06,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=['connect you']"
+        },
+        "no invented facts": {
+          "passed": true,
+          "detail": ""
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "That's a great question, and an important one. I checked our company information, but I don't see anything specific about H-1B visa sponsorship in the details I have access to. I'd rather be honest than guess on something this important.\n\nWhat I can tell you is that our benefits include health, dental, and vision insurance, a 401k match up to 4%, 20 days of PTO plus holidays, 16 weeks of paid parental leave, and a home office stipend. For the visa sponsorship question specifically, I'd recommend raising it with the recruiter during your first call, or I can offer to connect you with someone on our HR/People team who can give you a definitive answer.\n\nIs there anything else you'd like to know about the role or the company?",
+      "error": null
+    },
+    {
+      "id": "honest_ceo_name",
+      "category": "No hallucination",
+      "run": 1,
+      "passed": true,
+      "latency_s": 2.37,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=[\"don't have\", 'connect you']"
+        },
+        "no invented facts": {
+          "passed": true,
+          "detail": ""
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "I want to be upfront with you - I don't have specific information about our CEO's name in the material I have access to. I'd be happy to connect you with someone on our team who can answer that definitively.\n\nIn the meantime, is there anything else you'd like to know about the company, the role, or our culture that I might be able to help with?",
+      "error": null
+    },
+    {
+      "id": "honest_ceo_name",
+      "category": "No hallucination",
+      "run": 2,
+      "passed": true,
+      "latency_s": 2.73,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=[\"don't have\", 'connect you']"
+        },
+        "no invented facts": {
+          "passed": true,
+          "detail": ""
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "I'm sorry, but I don't have specific information about our CEO's name in the materials I have access to. I'd be happy to connect you with someone who can answer that, or you can follow up with our HR team directly.\n\nIs there anything else you'd like to know about the company, the role, or our culture? I did notice we have some relevant details about the engineering team and tech stack that might interest you.",
+      "error": null
+    },
+    {
+      "id": "honest_ceo_name",
+      "category": "No hallucination",
+      "run": 3,
+      "passed": true,
+      "latency_s": 2.9,
+      "tools_called": [
+        "company_info_tool"
+      ],
+      "checks": {
+        "reply has expected content": {
+          "passed": true,
+          "detail": "matched=[\"don't have\", 'connect you']"
+        },
+        "no invented facts": {
+          "passed": true,
+          "detail": ""
+        },
+        "non-empty reply": {
+          "passed": true,
+          "detail": ""
+        }
+      },
+      "reply": "I don't have the CEO's name in the information available to me, so I'd rather not guess. I can connect you with someone on our team who can confirm that for you. Is there anything else about the company, the role, or our culture I can help with in the meantime?",
+      "error": null
+    }
+  ]
+}

@@ -12,6 +12,7 @@ A real-time AI interviewer you talk to out loud. You open a web page, click **St
 - **Tool calling:** the LLM decides when to call `company_info_tool` (RAG lookup) or `record_answer_tool` (logs the candidate's answer for review)
 - **Web frontend** (Next.js + React) with a start screen, live transcripts and an audio visualizer
 - **Proactive greeting:** the interviewer opens the conversation as soon as the candidate joins
+- **Tested and evaluated:** 16 unit tests in CI, plus evals for retrieval, interview flow, grounded answers and hallucination
 - **Optional animated avatar** via Beyond Presence (off by default)
 
 ## How It Works
@@ -41,6 +42,9 @@ voice-interview-agent/
 ├── pyproject.toml         # Python dependencies (uv)
 ├── uv.lock
 ├── .env.example           # Template for .env.local
+├── tests/                 # pytest unit tests (fake LLM, no API keys)
+├── evals/                 # Behavior and retrieval evals against the real LLM
+├── .github/workflows/     # CI: tests + frontend lint/type check
 ├── frontend/              # Next.js web app (start screen, live transcript, visualizer)
 │   ├── app/               # Pages and the /api/token route
 │   ├── components/        # UI components
@@ -95,6 +99,30 @@ Open **http://localhost:3000**, click **Start interview** and allow the micropho
 To try the agent without the website, run `uv run agent.py console` and talk through your computer's microphone.
 
 **Using your own company document:** set `COMPANY_PDF_PATH` in `.env.local` and delete `chroma_store/` so it re-indexes.
+
+## Testing & Evaluation
+
+**Tests** (`tests/`, 16 tests, about 2 seconds, no API keys): the LangGraph workflow runs against a scripted fake LLM and fake retriever. They cover tool routing, the tool-to-LLM loop, multiple tool calls in one turn, unknown tool names, answer logging (append, not overwrite), configuration errors, and PDF indexing without duplicate chunks. CI runs them on every push, along with frontend lint and type checks.
+
+```bash
+uv run pytest
+```
+
+**Evals** (`evals/`) measure how the real agent behaves. They use the same LangGraph workflow and LLM as the voice agent, with only speech skipped, and grade with deterministic checks (tool calls, keywords, regex, length) instead of LLM-as-judge, so results are reproducible:
+
+- **Retrieval:** does the top-1 chunk contain the fact needed for 15 company questions? (hit rate @1)
+- **Interview flow:** after each answer, does the agent record it and ask the correct next question?
+- **Company Q&A:** does it call the RAG tool and answer with the right fact, concisely?
+- **No hallucination:** for facts *not* in the PDF (CEO salary, visa sponsorship, CEO name), does it say it doesn't know instead of inventing an answer?
+
+Each case runs several times to measure consistency, and latency is reported as p50/p95.
+
+```bash
+uv run python evals/run_evals.py            # writes evals/results.md and results.json
+uv run python evals/run_evals.py --runs 5   # more runs per case
+```
+
+Latest results: see [`evals/results.md`](evals/results.md).
 
 ## Known Limitations / Next Steps
 

@@ -54,7 +54,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
     >
       <head>
         <title>AI Voice Interviewer</title>
-        <meta name="description" content="A real-time AI voice interviewer built with LiveKit, LangGraph and RAG" />
+        <meta
+          name="description"
+          content="A real-time AI voice interviewer built with LiveKit, LangGraph and RAG"
+        />
       </head>
       <body className="overflow-x-hidden">
         <ThemeProvider

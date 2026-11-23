@@ -35,31 +35,34 @@ class LocalEmbeddings(Embeddings):
         return self.embed_documents([text])[0]
 
 
-# -------------------- Build your Interview RAG pipeline --------------------
-def create_workflow():
-    # DeepSeek's API is OpenAI-compatible, so ChatOpenAI works with a different base_url
+def build_llm():
+    """DeepSeek chat model. Its API is OpenAI-compatible, so ChatOpenAI works with a different base_url."""
     api_key = os.getenv("DEEPSEEK_API_KEY")
     if not api_key:
         raise RuntimeError("DEEPSEEK_API_KEY is not set. Add it to .env.local.")
-    llm = ChatOpenAI(
+    return ChatOpenAI(
         model=os.getenv("DEEPSEEK_MODEL", "deepseek-chat"),
         api_key=api_key,
         base_url="https://api.deepseek.com",
-        temperature=0.7,
+        temperature=float(os.getenv("LLM_TEMPERATURE", "0.7")),
     )
-    embeddings = LocalEmbeddings()
+
+
+def build_retriever(embeddings=None, pdf_path=None, persist_directory=None, k: int = 1):
+    """Load the company PDF, split it into chunks, index it in ChromaDB and return a retriever."""
+    embeddings = embeddings or LocalEmbeddings()
 
     # this is how the interviewer will know about the company it works for
-    pdf_path = os.getenv("COMPANY_PDF_PATH", str(BASE_DIR / "company_profile.pdf"))
+    pdf_path = pdf_path or os.getenv("COMPANY_PDF_PATH", str(BASE_DIR / "company_profile.pdf"))
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"PDF file not found: {pdf_path}. Set COMPANY_PDF_PATH in .env.local or put company_profile.pdf in the project folder.")
 
-    pages = PyPDFLoader(pdf_path).load() # allows the company info to be in the pages variable
+    pages = PyPDFLoader(pdf_path).load()
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200) # chunck size info for the rag model
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     pages_split = text_splitter.split_documents(pages)
 
-    persist_directory = os.getenv("CHROMA_DIR", str(BASE_DIR / "chroma_store")) # directory that holds vector info
+    persist_directory = persist_directory or os.getenv("CHROMA_DIR", str(BASE_DIR / "chroma_store"))
     os.makedirs(persist_directory, exist_ok=True)
 
     vectorstore = Chroma(
@@ -67,13 +70,20 @@ def create_workflow():
          embedding_function=embeddings,
          collection_name="company_info_local",)  # new name: local embeddings differ from the old OpenAI ones
 
-     # Only add the PDF if the database is empty
+    # Only add the PDF if the database is empty
     if vectorstore._collection.count() == 0:
          vectorstore.add_documents(pages_split)
 
-    retriever = vectorstore.as_retriever(
-         search_type="similarity",
-         search_kwargs={"k": 1})
+    return vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": k})
+
+
+# -------------------- Build your Interview RAG pipeline --------------------
+def create_workflow(llm=None, retriever=None, answers_path=None):
+    """Build the interview graph. Every dependency can be injected, so tests can use a fake LLM
+    and retriever, and evals can write answers to a temporary file instead of the real log."""
+    llm = llm or build_llm()
+    retriever = retriever or build_retriever()
+    answers_path = Path(answers_path or BASE_DIR / "interview_answers.txt")
 
     @tool # tool to search company info
     def company_info_tool(query: str) -> str:
@@ -88,7 +98,7 @@ def create_workflow():
     def record_answer_tool(answer: str) -> str:
         """Records the candidate's answer to a text file for later review."""
         # Simply write the answer to the file
-        with open(BASE_DIR / "interview_answers.txt", "a", encoding="utf-8") as f:
+        with open(answers_path, "a", encoding="utf-8") as f:
             f.write(f"\nAnswer:\n{answer}\n")
             f.write("-" * 50 + "\n")
         
