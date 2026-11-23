@@ -86,6 +86,15 @@ async def entrypoint(ctx: JobContext):
         ),
     )
 
+    # Greet the candidate right away with the first interview question, so they don't have to speak first.
+    # say() adds it to the chat history, so the LangGraph workflow moves on to question 2 after the reply.
+    await session.say(
+        "Hello! Thank you for joining us today. Let's start with the basics - could you tell me "
+        "about yourself? Please share your background, what you're passionate about, and what "
+        "brings you here today.",
+        allow_interruptions=True,
+    )
+
     print("Interview agent started.")
 
 
